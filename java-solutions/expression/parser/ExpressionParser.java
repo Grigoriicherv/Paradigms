@@ -1,9 +1,7 @@
-package expression.exceptions;
+package expression.parser;
 
 import expression.*;
-import expression.parser.BaseParser;
-import expression.parser.CharSource;
-import expression.parser.StringSource;
+import expression.exceptions.*;
 
 public final class ExpressionParser implements TripleParser {
     public TripleExpression parse(final String source) throws ParsingException {
@@ -32,7 +30,13 @@ public final class ExpressionParser implements TripleParser {
         private AllExpressions parseSomethingonExpression() throws ParsingException {
             skipWhitespace();
             AllExpressions result = parseExpression();
-            skipWhitespace();
+            if (skipWhitespacewithBool()){
+
+            }
+            else {
+                throw error("cc");
+            }
+
             while (test('s') || test('c')){
                 if (take('s')){
                     expect("et");
@@ -81,7 +85,7 @@ public final class ExpressionParser implements TripleParser {
             while (test('*') || test('/')){
                 if (take('*')){
                     skipWhitespace();
-                    checkExceptionsinExpression();
+                    checkExceptionsinTerms();
                     final AllExpressions result2 = parseValue();
                     result  = new CheckedMultiply (result, result2);
                     skipWhitespace();
@@ -89,7 +93,7 @@ public final class ExpressionParser implements TripleParser {
                 else{
                     take();
                     skipWhitespace();
-                    checkExceptionsinExpression();
+                    checkExceptionsinTerms();
                     final AllExpressions result2 = parseValue();
                     result = new CheckedDivide (result, result2);
                     skipWhitespace();
@@ -106,9 +110,6 @@ public final class ExpressionParser implements TripleParser {
                     final StringBuilder sb = new StringBuilder();
                     sb.append('-');
                     takeDigits(sb);
-                    if (test('s') || test('c')){
-                        throw new ParsingException("You have to do spase before set or clear");
-                    }
                     try {
                         return new Const(Integer.parseInt(sb.toString()));
                     }catch (NumberFormatException e){
@@ -126,9 +127,6 @@ public final class ExpressionParser implements TripleParser {
             } else if (between('0', '9')) {
                 final StringBuilder sb = new StringBuilder();
                 takeDigits(sb);
-                if (test('s') || test('c')){
-                    throw new ParsingException("You have to do spase before set or clear");
-                }
                 try {
                     return new Const(Integer.parseInt(sb.toString()));
                 }catch (NumberFormatException e){
@@ -164,8 +162,27 @@ public final class ExpressionParser implements TripleParser {
             }
         }
         private void skipWhitespace() {
+            boolean temp = false;
             while (isItWhiteSpase()){
                 take();
+                temp = true;
+            }
+        }
+        private boolean skipWhitespacewithBool() {
+            boolean temp = false;
+            while (isItWhiteSpase()){
+                take();
+                temp = true;
+            }
+            return temp;
+        }
+        private void checkExceptionsinTerms() throws ParsingException {
+            if (test('*') || test('/') || test('+')){
+                throw new ParsingException ("No second argument in operation"+" on position "+ super.getPosition());
+            } else if (test(')')) {
+                throw new ParsingException ("No second argument in operation"+" on position "+ super.getPosition());
+            } else if (test('\0')) {
+                throw new ParsingException ("No second argument in operation"+" in the end of source");
             }
         }
         private void checkExceptionsinExpression() throws ParsingException {
@@ -187,3 +204,4 @@ public final class ExpressionParser implements TripleParser {
 
     }
 }
+
