@@ -4,7 +4,7 @@ package expression.parser;
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
 public class StringSource implements CharSource {
-    private final String data;
+    public final String data;
     private int pos;
 
     public StringSource(final String data) {
@@ -19,6 +19,10 @@ public class StringSource implements CharSource {
         return pos < data.length();
     }
 
+    @Override
+    public String prit (){
+       return data;
+    }
     @Override
     public char next() {
         return data.charAt(pos++);

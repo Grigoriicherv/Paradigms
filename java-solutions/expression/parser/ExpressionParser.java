@@ -30,26 +30,17 @@ public final class ExpressionParser implements TripleParser {
         private AllExpressions parseSomethingonExpression() throws ParsingException {
             skipWhitespace();
             AllExpressions result = parseExpression();
-            if (skipWhitespacewithBool()){
-
-            }
-            else {
-                throw error("cc");
-            }
-
+            skipWhitespace();
             while (test('s') || test('c')){
                 if (take('s')){
                     expect("et");
                     final AllExpressions result2 = parseExpression();
                     result  = new Set(result, result2);
 
-                }
-                else{
-                    take();
-                    expect("lear");
+                } else  {
+                    expect("clear");
                     final AllExpressions result2 = parseExpression();
                     result = new Clear(result, result2);
-
                 }
             }
             return result;
@@ -85,7 +76,7 @@ public final class ExpressionParser implements TripleParser {
             while (test('*') || test('/')){
                 if (take('*')){
                     skipWhitespace();
-                    checkExceptionsinTerms();
+                    checkExceptionsinExpression();
                     final AllExpressions result2 = parseValue();
                     result  = new CheckedMultiply (result, result2);
                     skipWhitespace();
@@ -93,7 +84,7 @@ public final class ExpressionParser implements TripleParser {
                 else{
                     take();
                     skipWhitespace();
-                    checkExceptionsinTerms();
+                    checkExceptionsinExpression();
                     final AllExpressions result2 = parseValue();
                     result = new CheckedDivide (result, result2);
                     skipWhitespace();
@@ -105,11 +96,22 @@ public final class ExpressionParser implements TripleParser {
         private AllExpressions parseValue() throws ParsingException {
             skipWhitespace();
             final AllExpressions result;
-            if (take('-')){
+            if (take('c')){
+                expect("ount");
+                if (test('(') || test (' ')){
+                    result = parseValue();
+                    return new Count(result);
+                }
+                throw new ParsingException("Use count in correct format");
+            }
+            else if (take('-')){
                 if (between('0', '9')){
                     final StringBuilder sb = new StringBuilder();
                     sb.append('-');
                     takeDigits(sb);
+                    if (test('s') || test('c')){
+                        throw new ParsingException("You have to do spase before set or clear");
+                    }
                     try {
                         return new Const(Integer.parseInt(sb.toString()));
                     }catch (NumberFormatException e){
@@ -127,6 +129,9 @@ public final class ExpressionParser implements TripleParser {
             } else if (between('0', '9')) {
                 final StringBuilder sb = new StringBuilder();
                 takeDigits(sb);
+                if (test('s') || test('c')) {
+                    throw new ParsingException("You have to do spase before set or clear");
+                }
                 try {
                     return new Const(Integer.parseInt(sb.toString()));
                 }catch (NumberFormatException e){
@@ -150,7 +155,7 @@ public final class ExpressionParser implements TripleParser {
                 if (between('*', '/')){
                     throw new ParsingException ("No first argument"+" on position "+ super.getPosition());
                 } else {
-                    throw new ParsingException("No open brackets");
+                    throw new ParsingException("No open brackets"+ "|" + super.source);
                 }
             } else{
                 throw new ParsingException("No such symbol on position " + super.getPosition());
@@ -162,27 +167,8 @@ public final class ExpressionParser implements TripleParser {
             }
         }
         private void skipWhitespace() {
-            boolean temp = false;
             while (isItWhiteSpase()){
                 take();
-                temp = true;
-            }
-        }
-        private boolean skipWhitespacewithBool() {
-            boolean temp = false;
-            while (isItWhiteSpase()){
-                take();
-                temp = true;
-            }
-            return temp;
-        }
-        private void checkExceptionsinTerms() throws ParsingException {
-            if (test('*') || test('/') || test('+')){
-                throw new ParsingException ("No second argument in operation"+" on position "+ super.getPosition());
-            } else if (test(')')) {
-                throw new ParsingException ("No second argument in operation"+" on position "+ super.getPosition());
-            } else if (test('\0')) {
-                throw new ParsingException ("No second argument in operation"+" in the end of source");
             }
         }
         private void checkExceptionsinExpression() throws ParsingException {
@@ -204,4 +190,3 @@ public final class ExpressionParser implements TripleParser {
 
     }
 }
-

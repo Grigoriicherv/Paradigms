@@ -16,7 +16,7 @@ public class Main {
         ExpressionParser expr = new ExpressionParser();
 
         try {
-            System.out.println(expr.parse("5set5").evaluate(1, 2, 3));
+            System.out.println(expr.parse("count((count(x) / (y + z)))").evaluate(1, 2, 3));
         } catch (ParsingException e) {
             throw new RuntimeException(e);
         }

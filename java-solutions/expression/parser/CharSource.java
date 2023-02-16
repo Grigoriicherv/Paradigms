@@ -5,6 +5,8 @@ package expression.parser;
  */
 public interface CharSource {
     boolean hasNext();
+
+    String prit();
     char next();
     int getPos();
     IllegalArgumentException error(String message);
