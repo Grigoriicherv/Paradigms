@@ -1,13 +1,16 @@
 package queue;
 
-//Invariant: size() >= 0 && for i in [0, size()): a[i] != null
+//Invariant: FromHeadToTail.length >= 0 && for i in [0, tail): a[i] != null
+//FromHeadTTail -- if head > tail {a[head], a[head + 1].. a[elements.length - 1], a[0].. a[tail - 1]}
+//                 else {a[head].. a[tail - 1]}
 public class ArrayQueueADT {
     private Object[] elements = new Object[5];
     private int tail;
     private int head;
 
-    //Pred: element != null && queue != null
-    //Post: size()' == size() + 1 && a[tail] == element
+    //Pred: element != null queue != null
+    //Post: FromHeadTTail.length' == FromHeadTTail.length + 1 && a[tail] == element && tail' = tail + 1 &&
+    // for i: 0 <= i < FromHeadTTail.length {a[i] == a'[i]}
     public static void enqueue(ArrayQueueADT queue, Object element) {
         if (ArrayQueueADT.size(queue) == queue.elements.length - 1) {
             ensureCapacity(queue);
@@ -16,8 +19,9 @@ public class ArrayQueueADT {
         queue.tail = (queue.tail + 1) % queue.elements.length;
     }
 
-    //Pred: size() >= 1 && queue != null
-    //Post: R == a[head] && size()' == size() - 1
+    //Pred: FromHeadTTail.length >= 1 && queue != null
+    //Post: R == a[head] && FromHeadTTail.length' == FromHeadTTail.length - 1 && head' = head + 1 &&
+    // for i: 0 <= i < FromHeadTTail.length' {a[i + 1] == a'[i]}
     public static Object dequeue(ArrayQueueADT queue) {
 
         Object object = queue.elements[queue.head];
@@ -31,14 +35,14 @@ public class ArrayQueueADT {
         return queue.head == queue.tail;
     }
 
-    //Pred: size >= 1 && queue != null
-    //Post: R == a[head] && size()' == size()
+    //Pred: FromHeadToTail.length >= 1 && queue != null
+    //Post: R == a[head] && FromHeadToTail.length' == FromHeadToTail.length && for i: 0 <= i < n {a[i] == a'[i]}
     public static Object element(ArrayQueueADT queue) {
         return queue.elements[queue.head];
     }
 
     //Pred: queue != null
-    //Post: R == {from head to tail} && size()' == size()
+    //Post: R == FromHeadToTail && FromHeadToTail.length' == FromHeadToTail.length
     public static int size(ArrayQueueADT queue) {
 
         if (queue.head > queue.tail) {
@@ -56,7 +60,7 @@ public class ArrayQueueADT {
     }
 
     //Pred: true
-    //Post: R = queue && queue == ArrayQueueADT() && elements = Object[5]
+    //Post: R = queue && queue == new ArrayQueueADT() && elements = Object[5]
     public static ArrayQueueADT create() {
         ArrayQueueADT queue = new ArrayQueueADT();
         queue.elements = new Object[5];
@@ -75,8 +79,8 @@ public class ArrayQueueADT {
 
 
     }
-    //Pred: queue != null
-    //Post: R = [arr[head], ... arr[tail]]
+    //Pred: True
+    //Post: R = ([a[head], ... a[tail]] || [a[head], a[head + 1]... a[elements.size - 1], a[0]... a[tail - 1]])
     public static Object[] toArray(ArrayQueueADT queue){
         Object[] elementsNew = new Object[size(queue)];
         if (queue.tail >= queue.head){

@@ -1,14 +1,16 @@
 package queue;
 
-
-//Invariant: size() >= 0 && for i in [0, size()): a[i] != null
+//Invariant: FromHeadToTail.length >= 0 && for i in [0, tail): a[i] != null
+//FromHeadTTail -- if head > tail {a[head], a[head + 1].. a[elements.length - 1], a[0].. a[tail - 1]}
+//                 else {a[head].. a[tail - 1]}
 public class ArrayQueueModule {
     private static Object[] elements = new Object[5];
     private static int tail;
     private static int head;
 
     //Pred: element != null
-    //Post: size()' == size() + 1 && a[tail] == element
+    //Post: FromHeadTTail.length' == FromHeadTTail.length + 1 && a[tail] == element && tail' = tail + 1 &&
+    // for i: 0 <= i < FromHeadTTail.length {a[i] == a'[i]}
     public static void enqueue(Object element) {
         if (size() == elements.length - 1) {
             ensureCapacity();
@@ -17,8 +19,9 @@ public class ArrayQueueModule {
         tail = (tail + 1) % elements.length;
     }
 
-    //Pred: size() >= 1
-    //Post: R == a[head] && size()' == size() - 1
+    //Pred: FromHeadTTail.length >= 1
+    //Post: R == a[head] && FromHeadTTail.length' == FromHeadTTail.length - 1 && head' = head + 1 &&
+    // for i: 0 <= i < FromHeadTTail.length' {a[i + 1] == a'[i]}
     public static Object dequeue() {
         Object object = elements[head];
 
@@ -32,15 +35,15 @@ public class ArrayQueueModule {
         return head == tail;
     }
 
-    //Pred: size >= 1
-    //Post: R == a[head] && size()' == size()
+    //Pred: FromHeadToTail.length >= 1
+    //Post: R == a[head] && FromHeadToTail.length' == FromHeadToTail.length && for i: 0 <= i < n {a[i] == a'[i]}
     public static Object element() {
 
         return elements[head];
     }
 
-    //Pred: true
-    //Post: R == {from head to tail} && size()' == size()
+    //Pred: True
+    //Post: R == FromHeadToTail && FromHeadToTail.length' == FromHeadToTail.length
     public static int size() {
 
         if (head > tail) {
@@ -68,8 +71,8 @@ public class ArrayQueueModule {
         head = 0;
 
     }
-    //Pred: true
-    //Post: R = [arr[head], ... arr[tail]]
+    //Pred: True
+    //Post: R = ([a[head], ... a[tail]] || [a[head], a[head + 1]... a[elements.size - 1], a[0]... a[tail - 1]])
     public static Object[] toArray(){
 
         Object[] elementsNew = new Object[size()];
