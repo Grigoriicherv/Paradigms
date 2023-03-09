@@ -71,20 +71,6 @@ public class ArrayQueueModule {
         head = 0;
 
     }
-    //Pred: True
-    //Post: R = ([a[head], ... a[tail]] || [a[head], a[head + 1]... a[elements.size - 1], a[0]... a[tail - 1]])
-    public static Object[] toArray(){
-
-        Object[] elementsNew = new Object[size()];
-        if (tail >= head){
-            System.arraycopy(elements, head, elementsNew, 0, tail - head);
-        }
-        else{
-            System.arraycopy(elements, head, elementsNew, 0, elements.length - head);
-            System.arraycopy(elements, 0, elementsNew, elements.length - head, tail);
-        }
-        return (elementsNew);
-    }
 }
 
 

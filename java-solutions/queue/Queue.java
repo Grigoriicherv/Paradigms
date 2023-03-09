@@ -26,8 +26,11 @@ public interface Queue {
     // Pred: True
     // Post: n = 0
     void clear();
-    //Pred: True
-    //Post: R = [a[0], a[1], a[2]... a[n]]
-    Object[] toArray();
+    // Pred: elem != null
+    // Post: R = i (i - min in a[i] == elem)
+    int indexOf(Object elem);
+    // Pred: elem != null
+    // Post: R = j (j - max in a[j] == elem)
+    int lastIndexOf(Object elem);
 }
 

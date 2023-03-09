@@ -34,11 +34,11 @@ public class ArrayQueue extends AbstractQueue{
 //    }
     //Pred: true
     //Post: tail == 0 && head == 0 && elements == Object[5]
-//    public static void clear() {
-//        elements = new Object[5];
-//        tail = 0;
-//        head = 0;
-//    }
+    public void clear() {
+        elements = new Object[5];
+        tail = 0;
+        head = 0;
+    }
 
 
 
@@ -58,6 +58,8 @@ public class ArrayQueue extends AbstractQueue{
             return super.size();
     }
 
+
+
     //Pred: True
     //Post: head == 0 && tail == elements.length-1 && elements == Object[elements.length * 2]
     private void ensureCapacity() {
@@ -69,18 +71,42 @@ public class ArrayQueue extends AbstractQueue{
         head = 0;
 
     }
-    //Pred: True
-    //Post: R = ([a[head], ... a[tail]] || [a[head], a[head + 1]... a[elements.size - 1], a[0]... a[tail - 1]])
-    public Object[] toArray(){
-        Object[] elementsNew = new Object[size()];
-        if (tail >= head){
-            System.arraycopy(elements, head, elementsNew, 0, tail - head);
+    public int indexOf(Object elem){
+        if (size() > 0){
+            int i = head;
+            int j = 0;
+            while (i != tail){
+                if (elements[i].equals(elem)){
+                    return j;
+                }
+                i++;
+                j++;
+                if (i == elements.length){
+                    i = 0;
+                }
+            }
         }
-        else{
-            System.arraycopy(elements, head, elementsNew, 0, elements.length - head);
-            System.arraycopy(elements, 0, elementsNew, elements.length - head, tail);
+        return -1;
+    }
+
+    @Override
+    public int lastIndexOf(Object elem) {
+        int index = -1;
+        if (size() > 0){
+            int i = head;
+            int j = 0;
+            while (i != tail){
+                if (elements[i].equals(elem)){
+                    index = j;
+                }
+                i++;
+                j++;
+                if (i == elements.length){
+                    i = 0;
+                }
+            }
         }
-        return (elementsNew);
+        return index;
     }
 
 

@@ -79,18 +79,6 @@ public class ArrayQueueADT {
 
 
     }
-    //Pred: True
-    //Post: R = ([a[head], ... a[tail]] || [a[head], a[head + 1]... a[elements.size - 1], a[0]... a[tail - 1]])
-    public static Object[] toArray(ArrayQueueADT queue){
-        Object[] elementsNew = new Object[size(queue)];
-        if (queue.tail >= queue.head){
-            System.arraycopy(queue.elements, queue.head, elementsNew, 0, queue.tail - queue.head);
-        }
-        else{
-            System.arraycopy(queue.elements, queue.head, elementsNew, 0, queue.elements.length - queue.head);
-            System.arraycopy(queue.elements, 0, elementsNew, queue.elements.length - queue.head, queue.tail);
-        }
-        return (elementsNew);
-    }
+
 
 }

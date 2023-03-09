@@ -18,7 +18,7 @@ public class TestArrayQueue {
         for (int i = 2; i < 7; i++) {
             queue1.enqueue(i + 7);
         }
-        System.out.println(Arrays.toString(queue1.toArray()));
+
         System.out.println(queue1.isEmpty());
         System.out.println(queue1.size());
         System.out.println(queue1.element());

@@ -29,18 +29,47 @@ public class LinkedQueue extends AbstractQueue{
         Head = Head.next;
         return element;
     }
+    public void clear(){
+        Head = null;
+        Tail = null;
+        head = 0;
+        tail = 0;
+    }
 
-    @Override
-    public Object[] toArray() {
-        Object[] elementsNew = new Object[size()];
+
+    public int lastIndexOf(Object elem) {
         Elem temp = Head;
+        int index = -1;
         int i = 0;
-        do{
-            elementsNew[i++] = temp.value;
+        do {
+            if (temp == null){
+                continue;
+            }
+            if (temp.value.equals(elem)) {
+                index = i;
+            }
+            i++;
             temp = temp.next;
         }
         while (temp != null);
-        return elementsNew;
+        return index;
+    }
+
+    public int indexOf(Object elem) {
+        Elem temp = Head;
+        int i = 0;
+        do {
+            if (temp == null){
+                continue;
+            }
+            if (temp.value.equals(elem)) {
+                return i;
+            }
+            i++;
+            temp = temp.next;
+        }
+        while (temp != null);
+        return -1;
     }
 
     public Object element(){

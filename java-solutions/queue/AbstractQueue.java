@@ -11,9 +11,4 @@ public abstract class AbstractQueue implements Queue{
         return head == tail;
     }
 
-    public void clear() {
-        while(!isEmpty()){
-            dequeue();
-        }
-    }
 }
