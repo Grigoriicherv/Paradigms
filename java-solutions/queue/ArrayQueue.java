@@ -89,7 +89,6 @@ public class ArrayQueue extends AbstractQueue{
         return -1;
     }
 
-    @Override
     public int lastIndexOf(Object elem) {
         int index = -1;
         if (size() > 0){
