@@ -29,6 +29,20 @@ public class LinkedQueue extends AbstractQueue{
         Head = Head.next;
         return element;
     }
+
+    @Override
+    public Object[] toArray() {
+        Object[] elementsNew = new Object[size()];
+        Elem temp = Head;
+        int i = 0;
+        do{
+            elementsNew[i++] = temp.value;
+            temp = temp.next;
+        }
+        while (temp != null);
+        return elementsNew;
+    }
+
     public Object element(){
         return Head.value;
     }

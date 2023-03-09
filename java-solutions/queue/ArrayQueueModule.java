@@ -36,7 +36,7 @@ public class ArrayQueueModule {
     }
 
     //Pred: FromHeadToTail.length >= 1
-    //Post: R == a[head] && FromHeadToTail.length' == FromHeadToTail.length && for i: 0 <= i < n {a[i] == a'[i]}
+    //Post: R == a[head] && FromHeadToTail.length' == FromHeadToTail.length && for i: 0 <= i < FromHeadTTail.length {a[i] == a'[i]}
     public static Object element() {
 
         return elements[head];

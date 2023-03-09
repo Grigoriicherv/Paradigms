@@ -36,7 +36,7 @@ public class ArrayQueueADT {
     }
 
     //Pred: FromHeadToTail.length >= 1 && queue != null
-    //Post: R == a[head] && FromHeadToTail.length' == FromHeadToTail.length && for i: 0 <= i < n {a[i] == a'[i]}
+    //Post: R == a[head] && FromHeadToTail.length' == FromHeadToTail.length && for i: 0 <= i < FromHeadTTail.length {a[i] == a'[i]}
     public static Object element(ArrayQueueADT queue) {
         return queue.elements[queue.head];
     }
