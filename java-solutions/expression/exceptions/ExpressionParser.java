@@ -19,7 +19,7 @@ public final class ExpressionParser implements TripleParser {
 
         public AllExpressions parseExpressions() throws ParsingException {
             skipWhitespace();
-            final AllExpressions result = parseSomethingonExpression();
+            final AllExpressions result = parseSetOrClear();
             skipWhitespace();
             if (eof()) {
                 return result;
@@ -27,11 +27,10 @@ public final class ExpressionParser implements TripleParser {
             checkExceptionsinExpressions();
             throw new ParsingException ("End of parser");
         }
-        private AllExpressions parseSomethingonExpression() throws ParsingException {
-            skipWhitespace();
+        private AllExpressions parseSetOrClear() throws ParsingException {
             AllExpressions result = parseExpression();
-            skipWhitespace();
             while (test('s') || test('c')){
+                skipWhitespace();
                 if (take('s')){
                     expect("et");
                     final AllExpressions result2 = parseExpression();
@@ -95,72 +94,61 @@ public final class ExpressionParser implements TripleParser {
 
         private AllExpressions parseValue() throws ParsingException {
             skipWhitespace();
-            final AllExpressions result;
-            if (take('c')){
+            if (take('c')) {
                 expect("ount");
-                if (test('(') || test (' ')){
-                    result = parseValue();
+                if (test('(') || test(' ')) {
+                    AllExpressions result = parseValue();
                     return new Count(result);
                 }
                 throw new ParsingException("Use count in correct format");
-            }
-            else if (take('-')){
-                if (between('0', '9')){
-                    final StringBuilder sb = new StringBuilder();
+            } else if (take('-')) {
+                if (between('0', '9')) {
+                    StringBuilder sb = new StringBuilder();
                     sb.append('-');
                     takeDigits(sb);
-                    if (test('s') || test('c')){
-                        throw new ParsingException("You have to do spase before set or clear");
-                    }
                     try {
                         return new Const(Integer.parseInt(sb.toString()));
-                    }catch (NumberFormatException e){
+                    } catch (NumberFormatException e) {
                         throw new ParsingException("Number is too small");
                     }
-                }
-                else {
+                } else {
                     skipWhitespace();
                     if (test('\0')) {
-                        throw new ParsingException("No expression after minus"+" on position "+ super.getPosition());
+                        throw new ParsingException("No expression after minus on position " + getPosition());
                     }
-                    result = parseValue();
+                    AllExpressions result = parseValue();
                     return new CheckedNegate(result);
                 }
             } else if (between('0', '9')) {
-                final StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 takeDigits(sb);
                 if (test('s') || test('c')) {
-                    throw new ParsingException("You have to do spase before set or clear");
+                    throw new ParsingException("You have to do space before set or clear");
                 }
                 try {
                     return new Const(Integer.parseInt(sb.toString()));
-                }catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     throw new ParsingException("Number is too big");
                 }
             } else if (take('x')) {
                 return new Variable("x");
-            } else if(take('y')) {
+            } else if (take('y')) {
                 return new Variable("y");
             } else if (take('z')) {
                 return new Variable("z");
             } else if (take('(')) {
                 skipWhitespace();
-                if (test(')')){
+                if (test(')')) {
                     throw new ParsingException("No arguments in brackets");
                 }
-                result = parseSomethingonExpression();
+                AllExpressions result = parseSetOrClear();
                 expect(')');
                 return result;
-            } else if (between(')','/')) {
-                if (between('*', '/')){
-                    throw new ParsingException ("No first argument"+" on position "+ super.getPosition());
-                } else {
-                    throw new ParsingException("No open brackets"+ "|" + super.source);
-                }
-            } else{
-                throw new ParsingException("No such symbol on position " + super.getPosition());
+            } else {
+                throw new ParsingException("No such symbol on position " + getPosition());
             }
         }
+
         private void takeDigits(final StringBuilder sb) {
             while (between('0', '9') ) {
                 sb.append(take());

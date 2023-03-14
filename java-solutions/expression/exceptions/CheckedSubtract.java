@@ -9,9 +9,7 @@ public class CheckedSubtract extends Subtract {
     }
     @Override
     protected int evalOperation (int x, int y){
-        if (x < 0 && y > 0 && x - y > 0) {
-            throw new Overflow(x,y,"-");
-        } else if (x >= 0 && y <= 0 && x - y < 0) {
+        if ((y > 0 && x < Integer.MIN_VALUE + y) || (y < 0 && x > Integer.MAX_VALUE + y)) {
             throw new Overflow(x,y,"-");
         }
         return x - y;

@@ -9,7 +9,10 @@ public class CheckedMultiply extends Multiply {
     }
     @Override
     protected int evalOperation (int x, int y){
-        if (x != 0 && y != 0 && ((x * y) / y != x || (x * y) / x != y)) {
+        if (x > 0 && y > 0 && Integer.MAX_VALUE / x < y ||
+                x < 0 && y < 0 && Integer.MAX_VALUE / x > y ||
+                x > 0 && y < 0 && Integer.MIN_VALUE / x > y ||
+                x < 0 && y > 0 && Integer.MIN_VALUE / y > x) {
             throw new Overflow(x, y, "*");
         }
 
