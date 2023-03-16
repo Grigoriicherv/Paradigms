@@ -1,4 +1,4 @@
-package generic;
+package expression.generic;
 
 
 public class Variable<T> implements AllExpressions<T> {

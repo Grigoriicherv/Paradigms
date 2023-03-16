@@ -1,19 +1,18 @@
 package expression.generic;
 
-
 import expression.generic.types.Operations;
 
-public class UnaryMinus<T> extends UnaryOperations<T> {
+
+public class Abs<T> extends UnaryOperations<T> {
     private final Operations<T> type;
 
-    public UnaryMinus(AllExpressions<T> expression1, Operations<T> type) {
-        super(expression1, "square");
+    public Abs(AllExpressions<T> expression1, Operations<T> type) {
+        super(expression1, "abs");
         this.type  = type;
     }
 
     @Override
     protected T evalOperation(T x) {
-        return type.negate(x);
+        return type.abs(x);
     }
-
 }

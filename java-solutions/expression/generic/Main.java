@@ -1,10 +1,7 @@
-package generic;
+package expression.generic;
 
 
-import expression.exceptions.ParsingException;
-import generic.types.Operation;
-
-import java.math.BigInteger;
+import expression.generic.types.Operation;
 
 
 public class Main {

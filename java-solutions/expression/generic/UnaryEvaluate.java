@@ -1,4 +1,4 @@
-package generic;
+package expression.generic;
 
 public abstract class UnaryEvaluate<T>{
 

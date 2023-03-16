@@ -1,11 +1,11 @@
-package generic;
+package expression.generic;
 
 
+import expression.generic.types.Operations;
 import expression.parser.BaseParser;
 import expression.parser.CharSource;
 import expression.parser.StringSource;
 import expression.exceptions.*;
-import generic.types.Operations;
 
 public final class ExpressionParser<T> {
     public AllExpressions<T> parse(final String source, Operations<T> type) throws ParsingException {
@@ -43,7 +43,7 @@ public final class ExpressionParser<T> {
                     skipWhitespace();
                     checkExceptionsinExpression();
                     final AllExpressions<T> result2 = parseTerm();
-                    result  = new generic.Add<T>(result, result2, type);
+                    result  = new Add<T>(result, result2, type);
 
                 }
                 else{
@@ -51,7 +51,7 @@ public final class ExpressionParser<T> {
                     skipWhitespace();
                     checkExceptionsinExpression();
                     final AllExpressions<T> result2 = parseTerm();
-                    result = new generic.Subtract<T>(result, result2, type);
+                    result = new Subtract<T>(result, result2, type);
 
                 }
             }
@@ -66,7 +66,7 @@ public final class ExpressionParser<T> {
                     skipWhitespace();
                     checkExceptionsinExpression();
                     final AllExpressions<T> result2 = parseValue();
-                    result  = new generic.Multiply<> (result, result2, type);
+                    result  = new Multiply<>(result, result2, type);
                     skipWhitespace();
                 }
                 else if (take('/')) {
@@ -74,7 +74,7 @@ public final class ExpressionParser<T> {
                     skipWhitespace();
                     checkExceptionsinExpression();
                     final AllExpressions<T> result2 = parseValue();
-                    result = new generic.Divide<T> (result, result2, type);
+                    result = new Divide<T>(result, result2, type);
                     skipWhitespace();
                 }
                 else{
@@ -82,7 +82,7 @@ public final class ExpressionParser<T> {
                     skipWhitespace();
                     checkExceptionsinExpression();
                     final AllExpressions<T> result2 = parseValue();
-                    result  = new generic.Mod<> (result, result2, type);
+                    result  = new Mod<>(result, result2, type);
                     skipWhitespace();
                 }
             }
@@ -113,7 +113,7 @@ public final class ExpressionParser<T> {
                     takeDigits(sb);
                     try {
 
-                        return new generic.Const<>(sb.toString(), type);
+                        return new Const<>(sb.toString(), type);
                     } catch (NumberFormatException e) {
                         throw new ParsingException("Number is too small");
                     }
@@ -123,22 +123,22 @@ public final class ExpressionParser<T> {
                         throw new ParsingException("No expression after minus on position " + getPosition());
                     }
                     AllExpressions<T> result = parseValue();
-                    return new generic.UnaryMinus<>(result, type);
+                    return new UnaryMinus<>(result, type);
                 }
             } else if (between('0', '9')) {
                 StringBuilder sb = new StringBuilder();
                 takeDigits(sb);
                 try {
-                    return new generic.Const<>(sb.toString(), type);
+                    return new Const<>(sb.toString(), type);
                 } catch (NumberFormatException e) {
                     throw new ParsingException("Number is too big");
                 }
             } else if (take('x')) {
-                return new generic.Variable<>("x");
+                return new Variable<>("x");
             } else if (take('y')) {
-                return new generic.Variable<>("y");
+                return new Variable<>("y");
             } else if (take('z')) {
-                return new generic.Variable<>("z");
+                return new Variable<>("z");
             } else if (take('(')) {
                 skipWhitespace();
                 if (test(')')) {

@@ -1,8 +1,8 @@
-package generic;
+package expression.generic;
 
 
 
-import generic.types.Operations;
+import expression.generic.types.Operations;
 
 public class Subtract<T> extends BinaryOperations<T> {
     private final Operations<T> type;

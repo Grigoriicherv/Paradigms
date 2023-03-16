@@ -1,6 +1,6 @@
-package generic;
+package expression.generic;
 
-import generic.types.Operations;
+import expression.generic.types.Operations;
 
 
 public class Add<T> extends BinaryOperations<T>{
