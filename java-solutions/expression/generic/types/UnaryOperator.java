@@ -1,5 +1,5 @@
 package expression.generic.types;
 @FunctionalInterface
-interface UnaryOperator<T>{
+public interface UnaryOperator<T>{
     T apply(T a);
 }
