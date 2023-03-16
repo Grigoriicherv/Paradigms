@@ -2,7 +2,7 @@ package expression.parser;
 
 import expression.*;
 import expression.exceptions.*;
-
+import expression.parser.*;
 
 public final class ExpressionParser implements TripleParser {
     public TripleExpression parse(final String source) throws ParsingException {
@@ -78,7 +78,7 @@ public final class ExpressionParser implements TripleParser {
                     skipWhitespace();
                     checkExceptionsinExpression();
                     final AllExpressions result2 = parseValue();
-                    result  = new CheckedMultiply(result, result2);
+                    result  = new CheckedMultiply (result, result2);
                     skipWhitespace();
                 }
                 else{
