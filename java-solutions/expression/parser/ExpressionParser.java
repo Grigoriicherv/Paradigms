@@ -2,11 +2,11 @@ package expression.parser;
 
 import expression.*;
 import expression.exceptions.*;
-import expression.generic.TripleExpressionGeneric;
+
 
 public final class ExpressionParser implements TripleParser {
-    public TripleExpressionGeneric parse(final String source) throws ParsingException {
-        return (TripleExpressionGeneric) parse(new StringSource(source));
+    public TripleExpression parse(final String source) throws ParsingException {
+        return (TripleExpression) parse(new StringSource(source));
     }
 
     public static AllExpressions parse(final CharSource source) throws ParsingException {
