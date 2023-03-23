@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class GenericTabulator implements Tabulator {
     private final Map<String, Operations<?>> tabulators = Map.of(
-            "i" , new TypeIntOverFlow(),
+            "i" , new TypeInt(true),
             "d" ,  new TypeDouble(),
             "bi" ,  new TypeBigInt(),
-            "u", new TypeInt(),
+            "u", new TypeInt(false),
             "s", new TypeShort(),
             "l", new TypeLong(),
             "f", new TypeFloat()

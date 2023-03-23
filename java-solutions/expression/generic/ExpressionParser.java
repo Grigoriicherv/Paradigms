@@ -13,12 +13,12 @@ public final class ExpressionParser<T> {
     }
 
     public AllExpressions<T> parse(final CharSource source, Operations<T> type) throws ParsingException {
-        return new Expressionsparser<T>(source, type).parseExpressions();
+        return new ExpressionsParser<>(source, type).parseExpressions();
     }
 
-    private static class Expressionsparser<T> extends BaseParser {
+    private static class ExpressionsParser<T> extends BaseParser {
         Operations<T> type;
-        public Expressionsparser(final CharSource source, Operations<T> type) {
+        public ExpressionsParser(final CharSource source, Operations<T> type) {
             super(source);
             this.type = type;
         }
@@ -43,7 +43,7 @@ public final class ExpressionParser<T> {
                     skipWhitespace();
                     checkExceptionsinExpression();
                     final AllExpressions<T> result2 = parseTerm();
-                    result  = new Add<T>(result, result2, type);
+                    result  = new Add<>(result, result2, type);
 
                 }
                 else{
@@ -51,7 +51,7 @@ public final class ExpressionParser<T> {
                     skipWhitespace();
                     checkExceptionsinExpression();
                     final AllExpressions<T> result2 = parseTerm();
-                    result = new Subtract<T>(result, result2, type);
+                    result = new Subtract<>(result, result2, type);
 
                 }
             }
@@ -74,7 +74,7 @@ public final class ExpressionParser<T> {
                     skipWhitespace();
                     checkExceptionsinExpression();
                     final AllExpressions<T> result2 = parseValue();
-                    result = new Divide<T>(result, result2, type);
+                    result = new Divide<>(result, result2, type);
                     skipWhitespace();
                 }
                 else{

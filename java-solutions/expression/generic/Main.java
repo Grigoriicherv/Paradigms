@@ -1,21 +1,18 @@
 package expression.generic;
 
 
-import expression.generic.types.Operation;
+
+import java.util.Arrays;
 
 
 public class Main {
     public static void main(String[] args) {
-//        Scanner sc = new Scanner(System.in);
-//        int x = sc.nextInt();
-//        int y = sc.nextInt();
-//        int z = sc.nextInt();
-
-        //ExpressionParser<Double> expr = new ExpressionParser<>();
-        Short a = 8;
-        Short b = 7;
-        Operation.doBiOperation(a, b, (x, y) -> (short) (x + y));
-
-
+        try {
+            System.out.println(Arrays.deepToString(new GenericTabulator().tabulate(args[0], args[1],
+                    -2, 2, -2,
+                    2, -2, 2)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
