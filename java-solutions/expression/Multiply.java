@@ -6,6 +6,9 @@ public class Multiply extends BinaryOperations {
         super(expression1, expression2, "*");
     }
 
+    public Multiply() {
+    }
+
     @Override
     protected int evalOperation(int evExpres1, int evExpres2) {
         return evExpres1 * evExpres2;

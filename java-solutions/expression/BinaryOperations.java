@@ -5,14 +5,17 @@ import java.util.Objects;
 
 public abstract class BinaryOperations extends BinaryEvaluate implements AllExpressions, Expression, TripleExpression{
 
-    private final AllExpressions expression1;
-    private final AllExpressions expression2;
-    private final String op;
+    private AllExpressions expression1;
+    private AllExpressions expression2;
+    private String op;
 
     protected BinaryOperations(AllExpressions expression1, AllExpressions expression2, String op) {
         this.expression1 = expression1;
         this.expression2 = expression2;
         this.op = op;
+    }
+
+    protected BinaryOperations() {
     }
 
     @Override

@@ -7,8 +7,12 @@ public class CheckedNegate extends UnaryMinus {
     public CheckedNegate(AllExpressions expression1) {
         super(expression1);
     }
+
+    public CheckedNegate() {
+    }
+
     @Override
-    protected int evalOperation (int x){
+    public int evalOperation(int x){
         if (x == Integer.MIN_VALUE) {
             throw new Overflow(x,"This number is too big");
         }

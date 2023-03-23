@@ -7,9 +7,12 @@ public class UnaryMinus extends UnaryEvaluate implements AllExpressions, TripleE
 
 
 
-    private  final AllExpressions expression;
+    private AllExpressions expression;
     public UnaryMinus (AllExpressions expression){
         this.expression = expression;
+    }
+
+    public UnaryMinus() {
     }
 
 

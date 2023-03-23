@@ -6,6 +6,9 @@ public class Subtract extends BinaryOperations {
         super(expression1, expression2, "-");
     }
 
+    public Subtract() {
+    }
+
     @Override
     protected int evalOperation(int evExpres1, int evExpres2) {
         return evExpres1 - evExpres2;
