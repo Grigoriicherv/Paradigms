@@ -1,13 +1,13 @@
 const cnst = value => () => value;
 const VARIABLES = ['x', 'y', 'z'];
-const operation = (op, count) => (...args) => (...vars) => op(...args.map(fn => fn(...vars)));
+const operation = (op) => (...args) => (...vars) => op(...args.map(fn => fn(...vars)));
 const variable = name => (...args) => args[VARIABLES.indexOf(name)];
 const add = operation((a, b) => a + b);
 const subtract = operation((a, b) => a - b);
 const multiply = operation((a, b) => a * b);
 const divide = operation((a, b) => a / b);
 const negate = operation((a) => -a);
-const sinh = operation((a) => Math.sinh(a));
+const sinh = operation(Math.sinh);
 const cosh = operation((a) => Math.cosh(a));
 const one = cnst(1);
 const two = cnst(2);
