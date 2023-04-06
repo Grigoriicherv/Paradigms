@@ -31,8 +31,7 @@ class Subtract extends AbstractOperation {
 }
 class Multiply extends AbstractOperation {
     constructor(...args){
-        super("*", (a, b) => a * b, ...args)
-        
+        super("*", (a, b) => a * b, ...args)   
     }
 }
 class Divide extends AbstractOperation {
@@ -47,12 +46,12 @@ class Negate extends AbstractOperation {
 }
 class ArcTan extends AbstractOperation {
     constructor(...args){
-        super("atan", a => Math.atan(a), ...args)
+        super("atan", Math.atan, ...args)
     }	
 }
 class ArcTan2 extends AbstractOperation {
     constructor(...args){
-        super("atan2", (a, b) => Math.atan2(a, b), ...args)
+        super("atan2", Math.atan2, ...args)
     }	
 }
 class Const {
@@ -79,12 +78,6 @@ class Variable {
         return this.#arg.toString();
     }
 }
-
-const VARCONST = { 
-    'x': new Variable('x'), 
-    'y': new Variable('y'), 
-    'z': new Variable('z'),
-    }
     
 const OPS = {
   '+': Add,
@@ -96,7 +89,6 @@ const OPS = {
   'atan2': ArcTan2
 };
 
-
 const parse = expression => {
   const stack = [];
   expression.trim().split(/\s+/).forEach(token => {
@@ -104,8 +96,8 @@ const parse = expression => {
         const op = new OPS[token](...stack.slice(-2, stack.length))
         stack.splice(-op.length_op)
         stack.push(op)
-    } else if (token in VARCONST) {
-      stack.push(VARCONST[token]);
+    } else if (/[x-z]/.test(token)) {
+      stack.push(new Variable(token));
     } else {
       stack.push(new Const(token));
     }
