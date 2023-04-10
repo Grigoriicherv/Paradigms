@@ -78,7 +78,8 @@ class Variable {
         return this.#arg.toString();
     }
 }
-    
+
+//:NOTE: Хочется, чтобы мапа сама генерировалась, а не руками выписывать
 const OPS = {
   '+': Add,
   '-': Subtract,
