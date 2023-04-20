@@ -10,22 +10,24 @@ const AbstractExpression = {
     }
 }
 
+const abstractOperationProto = {};
+
 function AbstractOperation(operation, operator) {
     const op = function (...args) {
-    	this.args = args
-        
+        this.args = args
     };
-	
-	op.prototype.evaluate = function (x, y, z) {
-            return operation(...this.args.map(fn => fn.evaluate(x, y, z)));
-        }
-	op.prototype.toString = function () {
-            return this.args.map(fn => fn.toString()).join(" ") + " " + operator
-        }
-	op.prototype.prefix = function () {
-            return '(' + operator + " " + this.args.map(fn => fn.prefix()).join(" ") + ")"
-        }
-        op.prototype.length = operation.length
+    op.prototype = Object.create(abstractOperationProto);
+
+    op.prototype.evaluate = function (x, y, z) {
+        return operation(...this.args.map(fn => fn.evaluate(x, y, z)));
+    }
+    op.prototype.toString = function () {
+        return this.args.map(fn => fn.toString()).join(" ") + " " + operator
+    }
+    op.prototype.prefix = function () {
+        return '(' + operator + " " + this.args.map(fn => fn.prefix()).join(" ") + ")"
+    }
+    op.prototype.length = operation.length
     OPS[operator] = op;
     return op;
 }
@@ -33,52 +35,39 @@ function AbstractOperation(operation, operator) {
 
 function Const(value) {
     this.value = value;
-    
 };
 Const.prototype = Object.create(AbstractExpression);
 Const.prototype.evaluate = function (...xyz) {
-        return this.value;
+    return this.value;
 };
 
 
 function Variable(value) {
     this.value = value;
-    
+
 };
 Variable.prototype = Object.create(AbstractExpression);
 Variable.prototype.evaluate = function (...xyz) {
-        return xyz[this.value.charCodeAt(0) - 'x'.charCodeAt(0)];
+    return xyz[this.value.charCodeAt(0) - 'x'.charCodeAt(0)];
 };
 VAR.x = 0
 VAR.y = 1
 VAR.z = 2
 
-const Add = AbstractOperation(
-    (a, b) => a + b, '+'
-)
-const Subtract = AbstractOperation(
-    (a, b) => a - b, '-'
-)
-const Multiply = AbstractOperation(
-    (a, b) => a * b, '*'
-)
-const Divide = AbstractOperation(
-    (a, b) => a / b, '/'
-)
-const Negate = AbstractOperation(
-    a => -a, 'negate'
-)
-const ArcTan = AbstractOperation(
-    Math.atan, 'atan'
-)
-const ArcTan2 = AbstractOperation(
-    Math.atan2, 'atan2'
-)
+const Add = AbstractOperation((a, b) => a + b, '+')
+const Subtract = AbstractOperation((a, b) => a - b, '-')
+const Multiply = AbstractOperation((a, b) => a * b, '*')
+const Divide = AbstractOperation((a, b) => a / b, '/')
+const Negate = AbstractOperation(a => -a, 'negate')
+const ArcTan = AbstractOperation(Math.atan, 'atan')
+const ArcTan2 = AbstractOperation(Math.atan2, 'atan2')
 const Sum = AbstractOperation(
-    (...args) => args.reduce((total, current) => total + current, 0), 'sum'
+    (...args) => args.reduce((total, current) => total + current, 0),
+    'sum'
 )
 const Avg = AbstractOperation(
-    (...args) => args.reduce((total, current) => total + current, 0) / args.length, 'avg'
+    (...args) => args.reduce((total, current) => total + current, 0) / args.length,
+    'avg'
 )
 
 
@@ -99,30 +88,32 @@ const parse = expression => {
 //////////////////////////////////////////////////////////// EX 8
 
 const isNumeric = n => !isNaN(n);
+
 function tokenize(expression) {
-  let tokens = [];
-  let token = '';
-  for (let i = 0; i < expression.length; i++) {
-    if (expression[i] === '(' || expression[i] === ')') {
-      if (token) {
-        tokens.push(token);
-        token = '';
-      }
-      tokens.push(expression[i]);
-    } else if (/\s/.test(expression[i])) {
-      if (token) {
-        tokens.push(token);
-        token = '';
-      }
-    } else {
-      token += expression[i];
+    let tokens = [];
+    let token = '';
+    for (let i = 0; i < expression.length; i++) {
+        if (expression[i] === '(' || expression[i] === ')') {
+            if (token) {
+                tokens.push(token);
+                token = '';
+            }
+            tokens.push(expression[i]);
+        } else if (/\s/.test(expression[i])) {
+            if (token) {
+                tokens.push(token);
+                token = '';
+            }
+        } else {
+            token += expression[i];
+        }
     }
-  }
-  if (token) {
-    tokens.push(token);
-  }
-  return tokens;
+    if (token) {
+        tokens.push(token);
+    }
+    return tokens;
 }
+
 const parsePrefix = expression => {
     if (expression.length === 0) {
         throw new Error("Empty input")
@@ -184,7 +175,7 @@ function parseExpression(expression) {
         } else if (isNumeric(token)) {
             return new Const(parseInt(token));
         }
-        throw new ParseError("Not correcr token or not expected EOF on position" + source.getPosition());
+        throw new ParseError("Not correct token or not expected EOF on position" + source.getPosition());
     }
 
     function parseOperation() {
