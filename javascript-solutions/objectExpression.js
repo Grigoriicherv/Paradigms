@@ -10,27 +10,32 @@ const AbstractExpression = {
     }
 }
 
-const abstractOperationProto = {};
+const abstractOperationProto = {
+	evaluate: function (x, y, z) {
+        return this.operation(...this.args.map(fn => fn.evaluate(x, y, z)));
+    },
+    	toString: function () {
+        return this.args.map(fn => fn.toString()).join(" ") + " " + this.operator
+    },
+	prefix: function () {
+        return '(' + this.operator + " " + this.args.map(fn => fn.prefix()).join(" ") + ")"
+    }
+
+};
 
 function AbstractOperation(operation, operator) {
     const op = function (...args) {
         this.args = args
+        this.operation = operation
+        this.operator = operator
     };
     op.prototype = Object.create(abstractOperationProto);
 
-    op.prototype.evaluate = function (x, y, z) {
-        return operation(...this.args.map(fn => fn.evaluate(x, y, z)));
-    }
-    op.prototype.toString = function () {
-        return this.args.map(fn => fn.toString()).join(" ") + " " + operator
-    }
-    op.prototype.prefix = function () {
-        return '(' + operator + " " + this.args.map(fn => fn.prefix()).join(" ") + ")"
-    }
     op.prototype.length = operation.length
     OPS[operator] = op;
     return op;
 }
+
 
 
 function Const(value) {
