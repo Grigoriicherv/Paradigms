@@ -10,76 +10,75 @@ const AbstractExpression = {
     }
 }
 
-function AbstractOperation(operation, operator, length) {
+function AbstractOperation(operation, operator) {
     const op = function (...args) {
-        this.evaluate = function (x, y, z) {
-            return operation(...args.map(fn => fn.evaluate(x, y, z)));
-        }
-        this.toString = function () {
-            return args.map(fn => fn.toString()).join(" ") + " " + operator
-        }
-        this.prefix = function () {
-            return '(' + operator + " " + args.map(fn => fn.prefix()).join(" ") + ")"
-        }
+    	this.args = args
+        
     };
-
-    OPS[operator] = {func: op, length};
+	
+	op.prototype.evaluate = function (x, y, z) {
+            return operation(...this.args.map(fn => fn.evaluate(x, y, z)));
+        }
+	op.prototype.toString = function () {
+            return this.args.map(fn => fn.toString()).join(" ") + " " + operator
+        }
+	op.prototype.prefix = function () {
+            return '(' + operator + " " + this.args.map(fn => fn.prefix()).join(" ") + ")"
+        }
+        op.prototype.length = operation.length
+    OPS[operator] = op;
     return op;
 }
 
 
-function AbstractConst() {
-    const Exp = function (value) {
-        this.value = value
-        this.evaluate = function (...xyz) {
-            return value
-        }
+function Const(value) {
+    this.value = value;
+    
+};
+Const.prototype = Object.create(AbstractExpression);
+Const.prototype.evaluate = function (...xyz) {
+        return this.value;
+};
 
-    }
-    Exp.prototype = Object.create(AbstractExpression);
-    return Exp
-}
-
-const Const = AbstractConst()
 
 function Variable(value) {
-    this.value = value
-    this.evaluate = function (...xyz) { // :NOTE: in prototype
-        return xyz[value.charCodeAt(0) - 'x'.charCodeAt(0)]
-    }
-}
-
+    this.value = value;
+    
+};
 Variable.prototype = Object.create(AbstractExpression);
+Variable.prototype.evaluate = function (...xyz) {
+        return xyz[this.value.charCodeAt(0) - 'x'.charCodeAt(0)];
+};
 VAR.x = 0
 VAR.y = 1
 VAR.z = 2
 
 const Add = AbstractOperation(
-    (a, b) => a + b, '+', 2
+    (a, b) => a + b, '+'
 )
 const Subtract = AbstractOperation(
-    (a, b) => a - b, '-', 2
+    (a, b) => a - b, '-'
 )
 const Multiply = AbstractOperation(
-    (a, b) => a * b, '*', 2
+    (a, b) => a * b, '*'
 )
 const Divide = AbstractOperation(
-    (a, b) => a / b, '/', 2
+    (a, b) => a / b, '/'
 )
 const Negate = AbstractOperation(
-    a => -a, 'negate', 1
+    a => -a, 'negate'
 )
 const ArcTan = AbstractOperation(
-    Math.atan, 'atan', 1
+    Math.atan, 'atan'
 )
 const ArcTan2 = AbstractOperation(
-    Math.atan2, 'atan2', 2
+    Math.atan2, 'atan2'
 )
 const Sum = AbstractOperation(
-    (...args) => args.reduce((total, current) => total + current, 0), 'sum', 'n'
+    (...args) => args.reduce((total, current) => total + current, 0), 'sum'
 )
 const Avg = AbstractOperation(
-    (...args) => args.reduce((total, current) => total + current, 0) / args.length, 'avg', 'n'
+    (...args) => args.reduce((total, current) => total + current, 0) / args.length, 'avg'
 )
 
 
@@ -87,7 +86,7 @@ const parse = expression => {
     const stack = [];
     expression.trim().split(/\s+/).forEach(token => {
         if (token in OPS) {
-            stack.push(new OPS[token].func(...stack.splice(-OPS[token].length)));
+            stack.push(new OPS[token](...stack.splice(-OPS[token].prototype.length)));
         } else if (token in VAR) {
             stack.push(new Variable(token));
         } else {
@@ -97,16 +96,38 @@ const parse = expression => {
     return stack[0];
 };
 
-
 //////////////////////////////////////////////////////////// EX 8
 
 const isNumeric = n => !isNaN(n);
-
+function tokenize(expression) {
+  let tokens = [];
+  let token = '';
+  for (let i = 0; i < expression.length; i++) {
+    if (expression[i] === '(' || expression[i] === ')') {
+      if (token) {
+        tokens.push(token);
+        token = '';
+      }
+      tokens.push(expression[i]);
+    } else if (/\s/.test(expression[i])) {
+      if (token) {
+        tokens.push(token);
+        token = '';
+      }
+    } else {
+      token += expression[i];
+    }
+  }
+  if (token) {
+    tokens.push(token);
+  }
+  return tokens;
+}
 const parsePrefix = expression => {
     if (expression.length === 0) {
         throw new Error("Empty input")
     }
-    const tokens = expression.replace(/(\()|(\))/g, ' $& ').trim().split(/\s+/)
+    const tokens = tokenize(expression)
     return parseExpression(tokens)
 
 }
@@ -170,11 +191,11 @@ function parseExpression(expression) {
         const operator = parseOperator();
         const args = parseArgs();
 
-        if (args.length !== operator.length && operator.length !== 'n') {
+        if (args.length !== operator.prototype.length && operator.prototype.length !== 0) {
             throw new ParseError("Not correct number of args for operation")
         }
 
-        return new operator.func(...args);
+        return new operator(...args);
     }
 
     function parseOperator() {
@@ -188,11 +209,10 @@ function parseExpression(expression) {
     function parseArgs() {
         const args = [];
         let token = source.testNextToken();
-        while (!(token in OPS) && token !== ")") {
+        while (token !== ")") {
             args.push(parseInsideExpression());
             token = source.testNextToken();
         }
         return args;
     }
 }
-
